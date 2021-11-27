@@ -1,0 +1,236 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.min.css">
+<link rel="stylesheet" href="static/design.css">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+<script src="static/chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<h1 class="title">Room's Environment</h1>
+
+<!{% block content%}>
+<html lang="en">
+<head>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+  <script src="static/chart.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+
+   <div class="col cardtext-center">
+     <div class="duckie">
+         <img class="card-img-top" src="http://duckietown.org/media/duckie2.png">
+     </div>
+  </div>
+
+ </div>
+
+
+ <div class="tabs">
+<input type="radio" name="tabs" id="tabone" checked="checked">
+<label for="tabone">Room A</label>
+<div class="tab">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Data Type</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Lightness</th>
+      <td id="lightA">{{environmentA.lightness}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Temperature</th>
+      <td id="temperatureA">{{environmentA.temperature}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Humidity</th>
+      <td id="humidityA">{{environmentA.humidity}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Volume</th>
+      <td id="volumeA">{{environmentA.volume}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<input type="radio" name="tabs" id="tabtwo">
+<label for="tabtwo">Room B</label>
+<div class="tab">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Data Type</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Lightness</th>
+      <td id="lightB">{{environmentB.lightness}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Temperature</th>
+      <td id="temperatureB">{{environmentB.temperature}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Humidity</th>
+      <td id="humidityB">{{environmentB.humidity}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Volume</th>
+      <td id="volumeB">{{environmentB.volume}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<input type="radio" name="tabs" id="tabthree">
+<label for="tabthree">Room C</label>
+<div class="tab">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Data Type</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Lightness</th>
+      <td id="lightC">{{environmentC.lightness}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Temperature</th>
+      <td id="temperatureC">{{environmentC.temperature}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Humidity</th>
+      <td id="humidityC">{{environmentC.humidity}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Volume</th>
+      <td id="volumeC">{{environmentC.volume}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+  <div class="row">
+       <div class="col-sm-6">
+         <div class="chart">
+          <h2>Temperature</h2>
+             <div>
+                 <canvas id="canvas" width="80px" height="60px"></canvas>
+             </div>
+         </div>
+       </div>
+
+       <div class="col-sm-6">
+         <div class="chart">
+          <h2>Humidity</h2>
+             <div>
+                <canvas id="canvas2" width="80px" height="60px"></canvas>
+             </div>
+         </div>
+       </div>
+
+
+       <div class="col-sm-6">
+         <div class="chart">
+          <h2>My House</h2>
+              <img class="card-img-top" src="static/map.png">
+         </div>
+       </div>
+
+       <div class="col-sm-6">
+         <div class="chart">
+
+
+            <h3 style="display:inline; color: red" id="light-warning">The light is turned in: </h3><h3 id="RA"style="color:red;">Room A </h3><h3 id="RB"style="color:red;">Room B </h3><h3 id="RC"style="color:red;">Room C</h3>
+
+         </div>
+       </div>
+  </div>
+</div>
+
+
+  <a href="http://www.sitepoint.com/fancy-responsive-charts-with-chart-js" target="_blank"></a>
+  <div class="backdash">
+    <a href="/"> back to dashboard -></a>
+  </div>
+
+
+</body>
+
+</html>
+
+<script>
+setInterval(function(){
+  $.get('/getData', function(data){
+          //console.log(data);
+		  //Room A
+		  $('#lightA').text(data.environmentA.lightness);
+          if(data.environmentA.lightness <50){
+            $('#lightA').text(data.environmentA.lightness).css('color', 'red');
+            $('#RA').show();
+          }
+          else{
+            $('#lightA').text(data.environmentA.lightness).css('color', 'black');
+            $('#RA').hide();
+          }
+          $('#temperatureA').text(data.environmentA.temperature);
+          $('#humidityA').text(data.environmentA.humidity);
+          $('#volumeA').text(data.environmentA.volume);
+          $('#lightB').text(data.environmentB.lightness);
+		  if(data.environmentB.lightness <50){
+            $('#lightB').text(data.environmentB.lightness).css('color', 'red');
+              $('#RB').show();
+
+            //$('#light-warning').text(" Warning ! Room B forget to turn off the light!");
+          }
+          else{
+              $('#lightB').text(data.environmentB.lightness).css('color', 'black');
+              $('#RB').hide();
+
+          }
+          $('#temperatureB').text(data.environmentB.temperature);
+          $('#humidityB').text(data.environmentB.humidity);
+          $('#volumeB').text(data.environmentB.volume);
+
+
+          $('#lightC').text(data.environmentC.lightness);
+		  if(data.environmentC.lightness <50){
+            $('#lightC').text(data.environmentC.lightness).css('color', 'red');
+            $('#RC').show();
+            //$('#light-warning').text("Warning ! Room C forget to turn off the light!");
+          }
+          else{
+            $('#lightC').text(data.environmentC.lightness).css('color', 'black');
+              $('#RC').hide();
+          }
+          $('#temperatureC').text(data.environmentC.temperature);
+          $('#humidityC').text(data.environmentC.humidity);
+          $('#volumeC').text(data.environmentC.volume);
+
+
+		  if(data.environmentA.lightness <50 || data.environmentB.lightness <50 || data.environmentC.lightness <50 ){
+		     $('#light-warning').show();
+      }
+      else{
+        $('#light-warning').hide();
+      }
+
+      });
+
+}, 10000)
+
+</script>
+
+{% endblock %}

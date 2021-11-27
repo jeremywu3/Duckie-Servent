@@ -1,0 +1,50 @@
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+{% block content%}
+<html lang="en">
+
+<body>
+    <div class="container" >
+      <div class="row">
+        <div class="col cardtext-center" style="width: 20rem; ">
+          <!--<img class="card-img-top" src="http://duckietown.org/media/duckie2.png">-->
+            <p class="h1" id="currentState" style="color:red;">{{ state }}</p>
+            <p class="h1" id="currentLoc">Now at: {{ location }}</p>
+            <p class="h1" id="currentDest">Going to: {{ destination }}</p>
+          <form action="/changeState" method="post">
+            <input class="btn btn-warning btn-lg btn-block" type="submit" name="state" value="GUARD"/>
+          </form>
+          <form action="/changeDestination" method="post">
+            <input class="btn btn-primary btn-lg btn-block" type="submit" name="location" value="Door"/>
+            <input class="btn btn-primary btn-lg btn-block" type="submit" name="location" value="Room A"/>
+            <input class="btn btn-primary btn-lg btn-block" type="submit" name="location" value="Room B"/>
+            <input class="btn btn-primary btn-lg btn-block" type="submit" name="location" value="Room C"/>
+          </form>
+          <div class="card-body">
+            <a href="/display" class="card-link">Environment Data</a>
+          </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
+
+<script>
+
+setInterval(function(){
+  $.get('/getStatus', function(data){
+          //console.log(data);
+          $('#currentLoc').text("Now at: "+data.currentLoc);
+          $('#currentState').text(data.currentState);
+          $('#currentDest').text("Going to: "+data.currentDest);
+      });
+
+}, 2000)
+
+</script>
+
+{% endblock %}
